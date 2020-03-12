@@ -27,6 +27,7 @@ class Plant {
 	}
 }
 
+
 class LeafType {
 	static all = [];
 	static div = document.createElement("div")
@@ -45,7 +46,7 @@ class LeafType {
 		LeafType.all.push(this)
 	}
 	static appenddiv(element){
-		LeafType.div.class = "leaf_types"
+		this.div.classList.add("leaf_types")
 		element.appendChild(LeafType.div);
 	}
 	form() {
@@ -68,24 +69,33 @@ class Color {
 		this.checkbox.id = this.id;
 		Color.all.push(this)
 	}
-	form(element){
-		element.appendChild(this.label);
-		element.appendChild(this.checkbox);
-		element.innerHTML += `<br></br>`;
+	static appenddiv(element) {
+		element.appendChild(this.div)
+	}
+
+	form(){
+		console.log(this.constructor)
+		this.constructor.div.appendChild(this.label);
+		this.constructor.div.appendChild(this.checkbox);
+		this.constructor.div.innerHTML += `<br></br>`;
 	}
 }
 
 class FlowerColor extends Color {
+	static div = document.createElement("div")
 	constructor(id, name) {
 		super(id, name);
 		this.checkbox.name = "flowerColor";
+		this.constructor.div.classList.add("flower_colors")
 	}
 }
 
 class FruitColor extends Color {
+	static div = document.createElement("div")
 	constructor(id, name) {
 		super(id, name)
 		this.checkbox.name = "fruitColor";
+		this.constructor.div.classList.add("fruit_colors")
 	}
 }
 
@@ -133,16 +143,18 @@ document.addEventListener("DOMContentLoaded", function(){
 			let flower_colors_title = document.createElement("h3")
 			flower_colors_title.innerHTML = "What Color Were The Flowers?"
 			filter.appendChild(flower_colors_title)
+			FlowerColor.appenddiv(filter)
 			json.forEach(color => {
 				let color1 = new FlowerColor(color.id, color.name)
-				color1.form(filter)
+				color1.form()
 			})
 			let fruit_colors_title = document.createElement("h3")
 			fruit_colors_title.innerHTML = "What Color Were The Fruits/Berries?"
 			filter.appendChild(fruit_colors_title)
+			FruitColor.appenddiv(filter)
 			json.forEach(color => {
 				let color1 = new FruitColor(color.id, color.name)
-				color1.form(filter)
+				color1.form()
 			})
 			}).then(function(){
 				let leaftypes = Array.from(document.querySelectorAll('[name="leaftype"]'))

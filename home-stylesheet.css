@@ -13,6 +13,7 @@ h3 {
 
 label {
 	color: #a6670f;
+	padding-left: 10px;
 }
 
 nav {
@@ -29,4 +30,8 @@ button {
 	background-color: #d1ac19;
 	width: 150px;
 	padding: 10px;
+}
+
+div.leaf_type {
+	background-color: blue
 }

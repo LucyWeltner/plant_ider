@@ -20,7 +20,6 @@ class Plant {
 		element.appendChild(this.info)
 	}
 	titleize(attr){
-		console.log(this)
 		this[`${attr}`] = this[`${attr}`].split(" ")
 		this[`${attr}`] = this[`${attr}`].map(word => word[0].toUpperCase()+word.slice(1)).join(" ")
 		return this[`${attr}`]
@@ -28,36 +27,36 @@ class Plant {
 }
 
 
-class LeafType {
-	static all = [];
-	static div = document.createElement("div")
-	constructor(id, name, description, image_link){
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.image_link = image_link;
-		this.label = document.createElement("label");
-		this.label.for = this.id;
-		this.label.innerText = `${this.name[0].toUpperCase() + this.name.slice(1)}`;
-		this.checkbox = document.createElement("input");
-		this.checkbox.type = "checkbox";
-		this.checkbox.name = "leaftype";
-		this.checkbox.id = this.id
-		LeafType.all.push(this)
-	}
-	static appenddiv(element){
-		this.div.classList.add("leaf_types")
-		element.appendChild(LeafType.div);
-	}
-	form() {
-		LeafType.div.appendChild(this.label);
-		LeafType.div.appendChild(this.checkbox);
-		LeafType.div.innerHTML += `<br></br>`;
-	}
-}
+// class LeafType {
+// 	static all = [];
+// 	static div = document.createElement("div")
+// 	constructor(id, name, description, image_link){
+// 		this.id = id;
+// 		this.name = name;
+// 		this.description = description;
+// 		this.image_link = image_link;
+// 		this.label = document.createElement("label");
+// 		this.label.for = this.id;
+// 		this.label.innerText = `${this.name[0].toUpperCase() + this.name.slice(1)}`;
+// 		this.checkbox = document.createElement("input");
+// 		this.checkbox.type = "checkbox";
+// 		this.checkbox.name = "leaftype";
+// 		this.checkbox.id = this.id
+// 		LeafType.all.push(this)
+// 	}
+// 	static appenddiv(element){
+// 		this.div.classList.add("leaf_types")
+// 		element.appendChild(LeafType.div);
+// 	}
+// 	form() {
+// 		LeafType.div.appendChild(this.label);
+// 		LeafType.div.appendChild(this.checkbox);
+// 		LeafType.div.innerHTML += `<br></br>`;
+// 	}
+// }
 
-class Color {
-	static all = []
+class Attribute {
+	
 	constructor(id, name){
 		this.id = id;
 		this.name = name
@@ -67,21 +66,34 @@ class Color {
 		this.checkbox = document.createElement("input");
 		this.checkbox.type = "checkbox";
 		this.checkbox.id = this.id;
-		Color.all.push(this)
+		this.constructor.all.push(this)
 	}
 	static appenddiv(element) {
 		element.appendChild(this.div)
 	}
 
 	form(){
-		console.log(this.constructor)
 		this.constructor.div.appendChild(this.label);
 		this.constructor.div.appendChild(this.checkbox);
 		this.constructor.div.innerHTML += `<br></br>`;
 	}
 }
 
-class FlowerColor extends Color {
+class LeafType extends Attribute {
+	static all = []
+	static div = document.createElement("div")
+	constructor(id, name, description, image_link){
+		super(id, name);
+		this.description = description
+		this.image_link = image_link
+		this.constructor.div.classList.add("leaf_types")
+		this.checkbox.name = "leaftype";
+		this.checkbox.id = this.id
+	}
+}
+
+class FlowerColor extends Attribute {
+	static all = []
 	static div = document.createElement("div")
 	constructor(id, name) {
 		super(id, name);
@@ -90,7 +102,8 @@ class FlowerColor extends Color {
 	}
 }
 
-class FruitColor extends Color {
+class FruitColor extends Attribute {
+	static all = []
 	static div = document.createElement("div")
 	constructor(id, name) {
 		super(id, name)
@@ -130,7 +143,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		json.forEach(function(p){
 			let plant = new Plant(p.id, p.common_name, p.latin_name, p.leaf_type_id, p.native, p.flower_colors, p.fruit_colors)
 		})
-		console.log(Plant.all)
 	}).then(function(){
 		fetch("http://localhost:3000/leaf_types").then(response => response.json()).then(json => {
 			LeafType.appenddiv(filter)

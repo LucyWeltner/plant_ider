@@ -1,0 +1,32 @@
+*{
+	background-color: #b2eb21
+}
+
+h2 {
+	text-align: center;
+	color: purple;
+}
+
+h3 {
+	color: #c073ff;
+}
+
+label {
+	color: #a6670f;
+}
+
+nav {
+	background-color: #c073ff;
+	color: #65ffa5;
+	padding-left: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+button {
+	color: #c073ff;
+	font-size: 2em;
+	background-color: #d1ac19;
+	width: 150px;
+	padding: 10px;
+}

@@ -29,6 +29,7 @@ class Plant {
 
 class LeafType {
 	static all = [];
+	static div = document.createElement("div")
 	constructor(id, name, description, image_link){
 		this.id = id;
 		this.name = name;
@@ -43,10 +44,14 @@ class LeafType {
 		this.checkbox.id = this.id
 		LeafType.all.push(this)
 	}
-	form(element){
-		element.appendChild(this.label)
-		element.appendChild(this.checkbox)
-		element.innerHTML += `<br></br>`
+	static appenddiv(element){
+		LeafType.div.class = "leaf_types"
+		element.appendChild(LeafType.div);
+	}
+	form() {
+		LeafType.div.appendChild(this.label);
+		LeafType.div.appendChild(this.checkbox);
+		LeafType.div.innerHTML += `<br></br>`;
 	}
 }
 
@@ -118,9 +123,10 @@ document.addEventListener("DOMContentLoaded", function(){
 		console.log(Plant.all)
 	}).then(function(){
 		fetch("http://localhost:3000/leaf_types").then(response => response.json()).then(json => {
+			LeafType.appenddiv(filter)
 			json.forEach(leaf => {
 				let leaftype = new LeafType(leaf.id, leaf.name, leaf.description, leaf.image_link)
-				leaftype.form(filter)
+				leaftype.form()
 			})
 		}).then(function(){
 			fetch("http://localhost:3000/colors").then(response => response.json()).then(json => {
@@ -138,31 +144,30 @@ document.addEventListener("DOMContentLoaded", function(){
 				let color1 = new FruitColor(color.id, color.name)
 				color1.form(filter)
 			})
-		}).then(function(){
-			let leaftypes = Array.from(document.querySelectorAll('[name="leaftype"]'))
-			let fruitColors = Array.from(document.querySelectorAll('[name="fruitColor"]'))
-			let flowerColors = Array.from(document.querySelectorAll('[name="flowerColor"]'))
-			let button = document.querySelector("button")
-			button.addEventListener("click", (event => {
-				let results = document.querySelector(".results")
-				results.innerHTML = ""
-				let leaf_ids = checked_box_ids(leaftypes)
-				let fruit_color_ids = checked_box_ids(fruitColors)
-				let flower_color_ids = checked_box_ids(flowerColors)
-				let filtered = Plant.all 
-				if (leaf_ids.length !== 0) {
-					filtered = filter_plants(Plant.all, leaf_ids, "leaf_type_id")
-				}
-				if (flower_color_ids.length !== 0) {
-					filtered = filter_plants(filtered, flower_color_ids, "flower_colors_ids")
-				}
-				if (fruit_color_ids.length !== 0) {
-					filtered = filter_plants(filtered, fruit_color_ids, "fruit_colors_ids")
-				}
-				filtered.forEach(plant => plant.render(results))
-			}))
+			}).then(function(){
+				let leaftypes = Array.from(document.querySelectorAll('[name="leaftype"]'))
+				let fruitColors = Array.from(document.querySelectorAll('[name="fruitColor"]'))
+				let flowerColors = Array.from(document.querySelectorAll('[name="flowerColor"]'))
+				let button = document.querySelector("button")
+				button.addEventListener("click", (event => {
+					let results = document.querySelector(".results")
+					results.innerHTML = ""
+					let leaf_ids = checked_box_ids(leaftypes)
+					let fruit_color_ids = checked_box_ids(fruitColors)
+					let flower_color_ids = checked_box_ids(flowerColors)
+					let filtered = Plant.all 
+					if (leaf_ids.length !== 0) {
+						filtered = filter_plants(Plant.all, leaf_ids, "leaf_type_id")
+					}
+					if (flower_color_ids.length !== 0) {
+						filtered = filter_plants(filtered, flower_color_ids, "flower_colors_ids")
+					}
+					if (fruit_color_ids.length !== 0) {
+						filtered = filter_plants(filtered, fruit_color_ids, "fruit_colors_ids")
+					}
+					filtered.forEach(plant => plant.render(results))
+				}))
+			})
 		})
 	})
-})
-
 })

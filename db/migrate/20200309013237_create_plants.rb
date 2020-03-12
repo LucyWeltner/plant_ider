@@ -1,0 +1,10 @@
+class CreatePlants < ActiveRecord::Migration[6.0]
+  def change
+    create_table :plants do |t|
+      t.string :common_name
+      t.string :latin_name
+      t.integer :leaf_shape_id
+      t.boolean :native
+    end
+  end
+end

@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 	get '/plants' => 'plant#index'
 	get 'plants/:id' => 'plant#show'
+	patch 'plants/:id' => 'plant#update'
 	get '/leaf_types' => 'leaf_type#index'
 	get '/leaf_types/:id' => 'leaf_type#show'
 	get '/colors' => 'color#index'

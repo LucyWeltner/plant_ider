@@ -15,8 +15,36 @@ class Plant {
 		Plant.all.push(this)
 	}
 	render(element){
-		this.info.id = this.id
+		this.info.id = `plant-${this.id}`
 		this.info.innerHTML = `<h3>${this.titleize("common_name")}</h3><p><i>${this.latin_name}</i></p><p>Native to NE?: ${this.native}</p>`
+		let edit = document.createElement("button")
+		edit.classList.add("edit")
+		edit.id = this.id
+		edit.innerHTML = `Edit ${this.titleize("common_name")}`
+		this.info.appendChild(edit)
+		edit.addEventListener("click", () => {
+			this.info.innerHTML = `<h3>Edit ${this.common_name}</h3><label for="common_name">Edit Common Name:  </label><input type="text" name="common_name" value="${this.common_name}"></input><br></br><label for="latin_name">Edit Latin Name:  </label><input type="text" name="latin_name" value="${this.latin_name}"></input><br></br><label for="password">Password:  </label><input type="password" name="password"></input><br></br><input type="submit" class="submit" value="Edit Plant">`
+			let submit_button = document.querySelector(`div#plant-${this.id} > input.submit`)
+			let c_name_input = document.querySelector(`div#plant-${this.id} > input[name=common_name]`)
+			let l_name_input = document.querySelector(`div#plant-${this.id} > input[name=latin_name]`)
+			console.log(l_name_input)
+			console.log(c_name_input)
+			submit_button.addEventListener("click", (event) => {
+				event.preventDefault()
+				let configObj = {
+			 		method: "PATCH",
+			 		headers: {
+			 			"Content-Type": "application/json",
+			 			"Accept": "application/json"
+			 		},
+			 		body: JSON.stringify({
+			 			"common_name": document.querySelector("[name=common_name]").value,
+			 			"latin_name": document.querySelector("[name=latin_name]").value
+			 		})
+				}
+				fetch(`http://localhost:3000/plants/${this.id}`, configObj).then(response => response.json()).then(json => console.log(json))
+			})
+		})
 		element.appendChild(this.info)
 	}
 	titleize(attr){
@@ -25,35 +53,6 @@ class Plant {
 		return this[`${attr}`]
 	}
 }
-
-
-// class LeafType {
-// 	static all = [];
-// 	static div = document.createElement("div")
-// 	constructor(id, name, description, image_link){
-// 		this.id = id;
-// 		this.name = name;
-// 		this.description = description;
-// 		this.image_link = image_link;
-// 		this.label = document.createElement("label");
-// 		this.label.for = this.id;
-// 		this.label.innerText = `${this.name[0].toUpperCase() + this.name.slice(1)}`;
-// 		this.checkbox = document.createElement("input");
-// 		this.checkbox.type = "checkbox";
-// 		this.checkbox.name = "leaftype";
-// 		this.checkbox.id = this.id
-// 		LeafType.all.push(this)
-// 	}
-// 	static appenddiv(element){
-// 		this.div.classList.add("leaf_types")
-// 		element.appendChild(LeafType.div);
-// 	}
-// 	form() {
-// 		LeafType.div.appendChild(this.label);
-// 		LeafType.div.appendChild(this.checkbox);
-// 		LeafType.div.innerHTML += `<br></br>`;
-// 	}
-// }
 
 class Attribute {
 	
@@ -113,7 +112,7 @@ class FruitColor extends Attribute {
 }
 
 let checked_box_ids = function(checkboxes_array) {
-	filtered_array = checkboxes_array.filter(box => box.checked == true)
+	filtered_array = checkboxes_array.filter(box => box.checked)
 	let ids = filtered_array.map(checkbox => checkbox.id)
 	return ids
 }
@@ -172,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				let leaftypes = Array.from(document.querySelectorAll('[name="leaftype"]'))
 				let fruitColors = Array.from(document.querySelectorAll('[name="fruitColor"]'))
 				let flowerColors = Array.from(document.querySelectorAll('[name="flowerColor"]'))
-				let button = document.querySelector("button")
+				let button = document.querySelector("#filter")
 				button.addEventListener("click", (event => {
 					let results = document.querySelector(".results")
 					results.innerHTML = ""
@@ -195,3 +194,4 @@ document.addEventListener("DOMContentLoaded", function(){
 		})
 	})
 })
+

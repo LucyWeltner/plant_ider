@@ -1,4 +1,4 @@
-*{
+body {
 	background-color: #b2eb21
 }
 
@@ -24,12 +24,18 @@ nav {
 	padding-bottom: 5px;
 }
 
-button {
+button#filter {
 	color: #c073ff;
 	font-size: 2em;
 	background-color: #d1ac19;
 	width: 150px;
 	padding: 10px;
+}
+
+button.edit {
+	color: #c073ff;
+	font-size: 20px;
+	background-color: #d1ac19;
 }
 
 div.leaf_type {

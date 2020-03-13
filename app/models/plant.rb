@@ -4,4 +4,8 @@ class Plant < ApplicationRecord
 	has_many :flow_colors, through: :flower_colors, source: :color
 	has_many :fruit_colors 
 	has_many :fru_colors, through: :fruit_colors, source: :color
+	@@password = ENV["PLANT_SECRET"]
+	def self.password
+		@@password
+	end
 end

@@ -16,19 +16,36 @@ class Plant {
 	}
 	render(element){
 		this.info.id = `plant-${this.id}`
-		this.info.innerHTML = `<h3>${this.titleize("common_name")}</h3><p><i>${this.latin_name}</i></p><p>Native to NE?: ${this.native}</p>`
+		let plant_info = () => {return `<h3>${this.titleize("common_name")}</h3><p><i>${this.latin_name}</i></p><p>Native to NE?: ${this.native}</p>`}
+		this.info.innerHTML = plant_info()
 		let edit = document.createElement("button")
 		edit.classList.add("edit")
 		edit.id = this.id
 		edit.innerHTML = `Edit ${this.titleize("common_name")}`
+		let leaf_type_select = () => {
+			let html = ""
+			for(let i=0; i<LeafType.all.length; i++){
+				html += `<option value="${i+1}">${LeafType.all[i].name}</value><br></br>`
+			}
+			return html
+		}
 		this.info.appendChild(edit)
 		edit.addEventListener("click", () => {
-			this.info.innerHTML = `<h3>Edit ${this.common_name}</h3><label for="common_name">Edit Common Name:  </label><input type="text" name="common_name" value="${this.common_name}"></input><br></br><label for="latin_name">Edit Latin Name:  </label><input type="text" name="latin_name" value="${this.latin_name}"></input><br></br><label for="password">Password:  </label><input type="password" name="password"></input><br></br><input type="submit" class="submit" value="Edit Plant">`
+			this.info.innerHTML = `<h3>Edit ${this.common_name}</h3>
+				<label for="common_name">Edit Common Name:  </label>
+				<input type="text" name="common_name" value="${this.common_name}"></input>
+				<br></br><label for="latin_name">Edit Latin Name:  </label>
+				<input type="text" name="latin_name" value="${this.latin_name}"></input><br></br>
+				<label for="leaf_type_id">Edit Leaf Type:  </label>
+				<select id="leaf_type_selector">${leaf_type_select()}</select>
+				<label for="password">Password:  </label>
+				<input type="password" name="password"></input><br></br>
+				<input type="submit" class="submit" value="Edit Plant">`
 			let submit_button = document.querySelector(`div#plant-${this.id} > input.submit`)
 			let c_name_input = document.querySelector(`div#plant-${this.id} > input[name=common_name]`)
 			let l_name_input = document.querySelector(`div#plant-${this.id} > input[name=latin_name]`)
-			console.log(l_name_input)
-			console.log(c_name_input)
+			let leaf_type_menu = document.querySelector(`div#plant-${this.id} > select#leaf_type_selector`)
+			let password_input = document.querySelector(`div#plant-${this.id} > input[name=password]`)
 			submit_button.addEventListener("click", (event) => {
 				event.preventDefault()
 				let configObj = {
@@ -38,11 +55,24 @@ class Plant {
 			 			"Accept": "application/json"
 			 		},
 			 		body: JSON.stringify({
-			 			"common_name": document.querySelector("[name=common_name]").value,
-			 			"latin_name": document.querySelector("[name=latin_name]").value
+			 			"common_name": c_name_input.value,
+			 			"latin_name": l_name_input.value,
+			 			"leaf_type_id": leaf_type_menu.value, 
+			 			"password": password_input.value
 			 		})
 				}
-				fetch(`http://localhost:3000/plants/${this.id}`, configObj).then(response => response.json()).then(json => console.log(json))
+				fetch(`http://localhost:3000/plants/${this.id}`, configObj).then(response => response.json()).then(json => {
+					if (json["error"]) {
+						this.info.innerHTML = json["error"]
+					}
+					else {
+						this.common_name = json["common_name"]
+						this.latin_name = json["latin_name"]
+						this.leaf_type_id = json["leaf_type_id"]
+						this.info.innerHTML = `<p style = "color: #a9a4ff">Plant successfully edited!</p>` 
+						this.info.innerHTML += plant_info()
+					}
+				})
 			})
 		})
 		element.appendChild(this.info)

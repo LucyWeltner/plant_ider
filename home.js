@@ -119,6 +119,14 @@ class LeafType extends Attribute {
 		this.checkbox.name = "leaftype";
 		this.checkbox.id = this.id
 	}
+
+	lform(){
+		// super.form()
+		this.constructor.div.innerHTML += `<img class="leaf" height="35px" src=${this.image_link}><span>  </span>`
+		this.constructor.div.appendChild(this.label);
+		this.constructor.div.appendChild(this.checkbox);
+		this.constructor.div.innerHTML += `<br></br>`;
+	}
 }
 
 class FlowerColor extends Attribute {
@@ -178,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			LeafType.appenddiv(filter)
 			json.forEach(leaf => {
 				let leaftype = new LeafType(leaf.id, leaf.name, leaf.description, leaf.image_link)
-				leaftype.form()
+				leaftype.lform()
 			})
 		}).then(function(){
 			fetch("http://localhost:3000/colors").then(response => response.json()).then(json => {

@@ -19,8 +19,10 @@ class PlantController < ApplicationController
 			if plant.update(params.permit(:common_name, :latin_name, :leaf_type_id, :native)) 
 				render json: {id: plant.id, common_name: plant.common_name, latin_name: plant.latin_name, leaf_type_id: plant.leaf_type_id, native: plant.native, fruit_colors: plant.fru_colors, flower_colors: plant.flow_colors}
 			else
-				render json: {error: "Password is not correct"}
+				render json: {error: "Edit failed. You cannot edit that attribute"}
 			end
+		else
+			render json: {error: "Edit Failed. Password was not correct"}
 		end
 	end
 end

@@ -63,13 +63,13 @@ class Plant {
 				}
 				fetch(`http://localhost:3000/plants/${this.id}`, configObj).then(response => response.json()).then(json => {
 					if (json["error"]) {
-						this.info.innerHTML = json["error"]
+						this.info.innerHTML = `<p style = "color: #ff8957">${json["error"]}</p>` + plant_info()
 					}
 					else {
 						this.common_name = json["common_name"]
 						this.latin_name = json["latin_name"]
 						this.leaf_type_id = json["leaf_type_id"]
-						this.info.innerHTML = `<p style = "color: #a9a4ff">Plant successfully edited!</p>` 
+						this.info.innerHTML = `<p style = "color: #ff8957">Plant successfully edited!</p>` 
 						this.info.innerHTML += plant_info()
 					}
 				})
@@ -168,6 +168,7 @@ let filter_plants = function(plant_array, id_array, attr) {
 
 document.addEventListener("DOMContentLoaded", function(){
 	let filter = document.querySelector("main")
+	let see_all = document.querySelector("nav > p")
 	fetch("http://localhost:3000/plants").then(response => response.json()).then(function(json){
 		json.forEach(function(p){
 			let plant = new Plant(p.id, p.common_name, p.latin_name, p.leaf_type_id, p.native, p.flower_colors, p.fruit_colors)

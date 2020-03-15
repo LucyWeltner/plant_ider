@@ -110,6 +110,3 @@ FlowerColor.create!(plant_id: 10, color_id: 8)
 FlowerColor.create!(plant_id: 10, color_id: 9)
 
 FlowerColor.create!(plant_id: 11, color_id: 6)
-# toothed  smooth  grass-shaped  lobed  irregular
-
-# single clumped

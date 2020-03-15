@@ -26,7 +26,7 @@ class Plant {
 		let leaf_type_select = () => {
 			let html = ""
 			for(let i=0; i<LeafType.all.length; i++){
-				html += `<option value="${i+1}">${LeafType.all[i].name}</value><br></br>`
+				html += `<option value="${LeafType.all[i].id}">${LeafType.all[i].name}</value><br></br>`
 			}
 			return html
 		}

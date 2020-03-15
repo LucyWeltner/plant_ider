@@ -1,22 +1,23 @@
 
 class Plant {
 	static all = [];
-	constructor(id, common_name, latin_name, leaf_type_id, native, flower_colors, fruit_colors){
+	constructor(id, common_name, latin_name, leaf_type_id, native, flower_colors, fruit_colors, image){
 		this.id = id
 		this.common_name = common_name;
 		this.latin_name = latin_name;
 		this.leaf_type_id = leaf_type_id;
 		this.native = native;
-		this.flower_colors = flower_colors
-		this.fruit_colors = fruit_colors
-		this.flower_colors_ids = flower_colors.map(color => color.id)
-		this.fruit_colors_ids = fruit_colors.map(color => color.id)
+		this.image = image;
+		this.flower_colors = flower_colors;
+		this.fruit_colors = fruit_colors;
+		this.flower_colors_ids = flower_colors.map(color => color.id);
+		this.fruit_colors_ids = fruit_colors.map(color => color.id);
 		this.info = document.createElement("div")
 		Plant.all.push(this)
 	}
 	render(element){
 		this.info.id = `plant-${this.id}`
-		let plant_info = () => {return `<h3>${this.titleize("common_name")}</h3><p><i>${this.latin_name}</i></p><p>Native to NE?: ${this.native}</p>`}
+		let plant_info = () => {return `<h3>${this.titleize("common_name")}</h3><img src=${this.image} width="150px"><p><i>${this.latin_name}</i></p><p>Native to NE?: ${this.native}</p>`}
 		this.info.innerHTML = plant_info()
 		let edit = document.createElement("button")
 		edit.classList.add("edit")
@@ -121,11 +122,8 @@ class LeafType extends Attribute {
 	}
 
 	lform(){
-		// super.form()
 		this.constructor.div.innerHTML += `<img class="leaf" height="35px" src=${this.image_link}><span>  </span>`
-		this.constructor.div.appendChild(this.label);
-		this.constructor.div.appendChild(this.checkbox);
-		this.constructor.div.innerHTML += `<br></br>`;
+		super.form()
 	}
 }
 
@@ -177,9 +175,10 @@ let filter_plants = function(plant_array, id_array, attr) {
 document.addEventListener("DOMContentLoaded", function(){
 	let filter = document.querySelector("main")
 	let see_all = document.querySelector("nav > p")
+	let button = document.querySelector("#filter")
 	fetch("http://localhost:3000/plants").then(response => response.json()).then(function(json){
 		json.forEach(function(p){
-			let plant = new Plant(p.id, p.common_name, p.latin_name, p.leaf_type_id, p.native, p.flower_colors, p.fruit_colors)
+			let plant = new Plant(p.id, p.common_name, p.latin_name, p.leaf_type_id, p.native, p.flower_colors, p.fruit_colors, p.image)
 		})
 	}).then(function(){
 		fetch("http://localhost:3000/leaf_types").then(response => response.json()).then(json => {
@@ -210,7 +209,6 @@ document.addEventListener("DOMContentLoaded", function(){
 				let leaftypes = Array.from(document.querySelectorAll('[name="leaftype"]'))
 				let fruitColors = Array.from(document.querySelectorAll('[name="fruitColor"]'))
 				let flowerColors = Array.from(document.querySelectorAll('[name="flowerColor"]'))
-				let button = document.querySelector("#filter")
 				button.addEventListener("click", (event => {
 					let results = document.querySelector(".results")
 					results.innerHTML = ""
@@ -230,7 +228,14 @@ document.addEventListener("DOMContentLoaded", function(){
 					filtered.forEach(plant => plant.render(results))
 				}))
 			})
+		}).then(function(){
+			see_all.addEventListener("click", function(){
+				button.remove()
+				filter.innerHTML = ""
+				Plant.all.forEach(plant => plant.render(filter))
+			})
 		})
 	})
 })
+
 
